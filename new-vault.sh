@@ -7,8 +7,8 @@ usage() {
   cat <<'EOF'
 Usage: new-vault.sh [--force] [folder-name]
 
-Creates an Obsidian vault named folder-name (default: vault) in the current
-directory.
+Creates an Obsidian vault in the current directory, prompting for the folder
+name (default: vault).
 
   --force     overwrite an existing vault folder
   -h, --help  show this help
@@ -19,7 +19,7 @@ EOF
 }
 
 FORCE=0
-VAULT_NAME="vault"
+VAULT_NAME=""
 for arg in "$@"; do
   case "$arg" in
     --force) FORCE=1 ;;
@@ -28,6 +28,16 @@ for arg in "$@"; do
     *) VAULT_NAME="$arg" ;;
   esac
 done
+
+if [[ -z "$VAULT_NAME" ]]; then
+  if [[ -t 0 ]]; then
+    read -rp "Vault folder name [vault]: " VAULT_NAME || true
+  elif { exec 3</dev/tty; } 2>/dev/null; then
+    read -rp "Vault folder name [vault]: " VAULT_NAME <&3 || true
+    exec 3<&-
+  fi
+  VAULT_NAME="${VAULT_NAME:-vault}"
+fi
 
 TARGET="$PWD/$VAULT_NAME"
 
