@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TEMPLATE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_URL="${VAULT_REPO_URL:-https://github.com/limxuan/vault.git}"
 
 usage() {
   cat <<'EOF'
 Usage: new-vault.sh [--force] <target-dir>
 
-Stamps this Obsidian vault template into <target-dir>, creating the directory
-if needed. Existing .obsidian config is only overwritten with --force.
+Install the Obsidian vault template into <target-dir> (created if needed).
 
-Options:
-  --force     overwrite .obsidian in the target if it already exists
+  --force     overwrite an existing .obsidian in the target
   -h, --help  show this help
 
-Examples:
+Run locally:
   ./new-vault.sh ~/Projects/my-app
-  ./new-vault.sh --force ~/Projects/my-app
+
+Or straight from GitHub, no checkout needed:
+  curl -fsSL https://raw.githubusercontent.com/limxuan/vault/main/new-vault.sh | bash -s -- ~/Projects/my-app
 EOF
 }
 
@@ -41,6 +41,33 @@ if [[ -e "$TARGET/.obsidian" && "$FORCE" -ne 1 ]]; then
   exit 1
 fi
 
+SCRIPT_DIR=""
+if [[ -n "${BASH_SOURCE[0]:-}" && -f "${BASH_SOURCE[0]}" ]]; then
+  SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+fi
+
+TMP_DIR=""
+cleanup() { [[ -n "$TMP_DIR" ]] && rm -rf -- "$TMP_DIR" || true; }
+trap cleanup EXIT
+
+if [[ -n "$SCRIPT_DIR" && -e "$SCRIPT_DIR/.obsidian" ]]; then
+  SRC="$SCRIPT_DIR"
+else
+  command -v git >/dev/null 2>&1 || {
+    echo "error: git is required when running this script without a local checkout" >&2
+    exit 1
+  }
+  TMP_DIR="$(mktemp -d)"
+  echo "Fetching vault template from $REPO_URL ..."
+  git clone --depth 1 --quiet "$REPO_URL" "$TMP_DIR/template"
+  SRC="$TMP_DIR/template"
+fi
+
+command -v rsync >/dev/null 2>&1 || {
+  echo "error: rsync is required" >&2
+  exit 1
+}
+
 mkdir -p -- "$TARGET"
 
 rsync -a \
@@ -48,15 +75,14 @@ rsync -a \
   --exclude '/.trash/' \
   --exclude '/.gitignore' \
   --exclude '/new-vault.sh' \
-  --exclude '/unlink-git.sh' \
   --exclude '/README.md' \
   --exclude '/.obsidian/workspace.json' \
   --exclude '/.obsidian/workspace-mobile.json' \
   --exclude '/.obsidian/cache/' \
-  "$TEMPLATE_DIR"/ "$TARGET"/
+  "$SRC"/ "$TARGET"/
 
 if [[ ! -e "$TARGET/Welcome.md" ]]; then
-  cp -- "$TEMPLATE_DIR/Welcome.md" "$TARGET/Welcome.md"
+  cp -- "$SRC/Welcome.md" "$TARGET/Welcome.md"
 fi
 
 GITIGNORE="$TARGET/.gitignore"

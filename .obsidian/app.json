@@ -5,7 +5,6 @@
   "attachmentFolderPath": "! Pasted Media",
   "userIgnoreFilters": [
     "README.md",
-    "new-vault.sh",
-    "unlink-git.sh"
+    "new-vault.sh"
   ]
 }
