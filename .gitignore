@@ -1,0 +1,11 @@
+# Obsidian transient UI state (per machine, changes constantly)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache/
+
+# Obsidian trash
+.trash/
+
+# OS cruft
+.DS_Store
+Thumbs.db
