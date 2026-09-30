@@ -14,7 +14,7 @@ name (default: vault).
   -h, --help  show this help
 
   cd ~/Projects/my-app
-  curl -fsSL https://cdn.jsdelivr.net/gh/limxuan/vault@main/new-vault.sh | bash
+  curl -fsSL https://raw.githubusercontent.com/limxuan/vault/main/new-vault.sh | bash
 EOF
 }
 
