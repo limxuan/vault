@@ -1,6 +1,8 @@
 set clipboard=unnamedplus
 imap kj <Esc>
 nmap gl $
+noremap <C-u> <C-u>zz
+noremap <C-d> <C-d>zz
 
 unmap <Space>
 exmap open_file obcommand switcher:open
