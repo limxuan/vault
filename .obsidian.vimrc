@@ -3,6 +3,8 @@ imap kj <Esc>
 nmap gl $
 noremap <C-u> <C-u>zz
 noremap <C-d> <C-d>zz
+noremap n nzz
+noremap N Nzz
 
 unmap <Space>
 exmap open_file obcommand switcher:open
