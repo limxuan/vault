@@ -3,12 +3,12 @@ imap kj <Esc>
 nmap gl $
 noremap <C-u> <C-u>zz
 noremap <C-d> <C-d>zz
-noremap n nzz
-noremap N Nzz
 
 unmap <Space>
 exmap open_file obcommand switcher:open
 exmap search_word obcommand global-search:open
+exmap search_file obcommand editor:open-search
+nmap / :search_file<CR>
 exmap save_file obcommand editor:save-file
 exmap close_window obcommand workspace:close
 exmap buf1 obcommand workspace:goto-tab-1
