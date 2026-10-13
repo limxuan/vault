@@ -14,3 +14,10 @@ Update an existing vault's config, keeping your notes:
 cd path/to/vault
 curl -fsSL https://raw.githubusercontent.com/limxuan/vault/main/new-vault.sh | bash -s -- --sync
 ```
+
+Push an existing vault's config back to this template (notes are never touched):
+
+```sh
+cd path/to/vault
+curl -fsSL https://raw.githubusercontent.com/limxuan/vault/main/push-vault.sh | bash
+```

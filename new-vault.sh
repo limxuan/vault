@@ -81,7 +81,7 @@ else
   command -v git >/dev/null 2>&1 || { echo "error: git is required" >&2; exit 1; }
   TMP_DIR="$(mktemp -d)"
   echo "Fetching vault template from $REPO_URL ..."
-  git clone --depth 1 --quiet "$REPO_URL" "$TMP_DIR/template"
+  git clone --depth 1 --quiet "$REPO_URL" "$TMP_DIR/template" </dev/null
   SRC="$TMP_DIR/template"
 fi
 
@@ -97,6 +97,7 @@ if [[ "$MODE" == "create" ]]; then
     --exclude '/.git/' \
     --exclude '/.trash/' \
     --exclude '/new-vault.sh' \
+    --exclude '/push-vault.sh' \
     --exclude '/README.md' \
     --exclude '/.obsidian/workspace.json' \
     --exclude '/.obsidian/workspace-mobile.json' \
