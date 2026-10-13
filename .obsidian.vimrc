@@ -3,12 +3,12 @@ imap kj <Esc>
 nmap gl $
 noremap <C-u> <C-u>zz
 noremap <C-d> <C-d>zz
+noremap n nzz
+noremap N Nzz
 
 unmap <Space>
 exmap open_file obcommand switcher:open
 exmap search_word obcommand global-search:open
-exmap search_file obcommand editor:open-search
-nmap / :search_file<CR>
 exmap save_file obcommand editor:save-file
 exmap close_window obcommand workspace:close
 exmap buf1 obcommand workspace:goto-tab-1
@@ -35,3 +35,9 @@ nmap <Space>6 :buf6<CR>
 nmap <Space>7 :buf7<CR>
 nmap <Space>8 :buf8<CR>
 nmap <Space>9 :buf9<CR>
+
+exmap copywikilink jscommand { navigator.clipboard.writeText('[[' + view.file.path.replace(/\.md$/, '') + ']]'); }
+nmap <Space>cp :copywikilink<CR>
+
+exmap copyheaderlink jscommand { const f = view.file; const line = editor.getCursor().line; const hs = (view.app.metadataCache.getFileCache(f) || {}).headings || []; let h = null; for (const x of hs) { if (x.position.start.line <= line) h = x; else break; } const name = f.path.replace(/\.md$/, ''); navigator.clipboard.writeText('[[' + name + (h ? '#' + h.heading.replace(/[#|^\[\]]/g, ' ') : '') + ']]'); }
+nmap <Space>ch :copyheaderlink<CR>
